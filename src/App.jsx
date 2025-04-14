@@ -1,35 +1,5 @@
 import { useState } from "react";
 
-// const todos = [
-//   {
-//     id: 1,
-//     title: "Jog around the park 3x",
-//     completed: false,
-//   },
-//   {
-//     id: 2,
-//     title: "10 minutes meditation",
-//     completed: false,
-//   },
-//   {
-//     id: 3,
-//     title: "Read for 1 hour",
-//     completed: false,
-//   },
-//   {
-//     id: 4,
-//     title: "Pick up groceries",
-//     completed: true,
-//   },
-//   {
-//     id: 5,
-//     title: "Complete Todo App",
-//     completed: false,
-//   },
-// ];
-
-// const inputTodo = [];
-
 function App() {
   const [inputTask, setInputTask] = useState("");
   const [task, setTasks] = useState([]);
@@ -80,43 +50,74 @@ function MainContainer({ inputTask, onSetInput, task, onSetTask }) {
         </form>
       </div>
       <div className="todo-list-container">
-        <TodoList task={task} />
-        <Footer />
+        <TodoList task={task} onSetTask={onSetTask} />
+        <Footer task={task} onSetTask={onSetTask} />
       </div>
     </main>
   );
 }
 
-function TodoList({ task }) {
+function TodoList({ task, onSetTask }) {
   return (
     <ul>
       {task.map((todo) => (
-        <Todo todo={todo} key={todo.id} />
+        <Todo todo={todo} key={todo.id} onSetTask={onSetTask} />
       ))}
     </ul>
   );
 }
 
-function Todo({ todo }) {
+function Todo({ todo, onSetTask }) {
+  function handleChecked(id) {
+    onSetTask((tasks) =>
+      tasks.map((task) =>
+        task.id === id ? { ...task, completed: !task.completed } : task
+      )
+    );
+  }
+
+  function handleDeleteItem(id) {
+    onSetTask((tasks) => tasks.filter((task) => task.id !== id));
+  }
+
   return (
-    <li className="todo-item">
-      <input type="checkbox" />
+    <li
+      className="todo-item"
+      style={todo.completed ? { textDecoration: "line-through" } : {}}
+    >
+      <input
+        type="checkbox"
+        value={todo.completed}
+        onChange={() => handleChecked(todo.id)}
+      />
       <span>{todo.title}</span>
-      <img src="./images/icon-cross.svg" alt="icon-cross" />
+      <img
+        src="./images/icon-cross.svg"
+        alt="icon-cross"
+        onClick={() => handleDeleteItem(todo.id)}
+      />
     </li>
   );
 }
 
-function Footer() {
+function Footer({ task, onSetTask }) {
+  // const [sort, onSort] = useState("All");
+
+  function handleClearCompleted() {
+    onSetTask((tasks) => tasks.filter((task) => task.completed === false));
+  }
+
   return (
     <footer>
-      <span>5 items left</span>
+      <span>{task.length} items left</span>
       <div className="filters">
         <p className="active">All</p>
         <p>Active</p>
         <p>Completed</p>
       </div>
-      <p className="clear">Clear Completed</p>
+      <p className="clear" onClick={handleClearCompleted}>
+        Clear Completed
+      </p>
     </footer>
   );
 }
