@@ -1,36 +1,47 @@
-const todos = [
-  {
-    id: 1,
-    title: "Jog around the park 3x",
-    completed: false,
-  },
-  {
-    id: 2,
-    title: "10 minutes meditation",
-    completed: false,
-  },
-  {
-    id: 3,
-    title: "Read for 1 hour",
-    completed: false,
-  },
-  {
-    id: 4,
-    title: "Pick up groceries",
-    completed: true,
-  },
-  {
-    id: 5,
-    title: "Complete Todo App",
-    completed: false,
-  },
-];
+import { useState } from "react";
+
+// const todos = [
+//   {
+//     id: 1,
+//     title: "Jog around the park 3x",
+//     completed: false,
+//   },
+//   {
+//     id: 2,
+//     title: "10 minutes meditation",
+//     completed: false,
+//   },
+//   {
+//     id: 3,
+//     title: "Read for 1 hour",
+//     completed: false,
+//   },
+//   {
+//     id: 4,
+//     title: "Pick up groceries",
+//     completed: true,
+//   },
+//   {
+//     id: 5,
+//     title: "Complete Todo App",
+//     completed: false,
+//   },
+// ];
+
+// const inputTodo = [];
 
 function App() {
+  const [inputTask, setInputTask] = useState("");
+  const [task, setTasks] = useState([]);
   return (
     <div className="app">
       <Header />
-      <MainContainer />
+      <MainContainer
+        inputTask={inputTask}
+        onSetInput={setInputTask}
+        task={task}
+        onSetTask={setTasks}
+      />
     </div>
   );
 }
@@ -44,29 +55,42 @@ function Header() {
   );
 }
 
-function MainContainer() {
+function MainContainer({ inputTask, onSetInput, task, onSetTask }) {
+  function handleSubmit(e) {
+    e.preventDefault();
+    if (!inputTask) return;
+    const id = crypto.randomUUID();
+    const newTask = { id: id, title: inputTask, completed: false };
+    console.log(newTask);
+    onSetTask((tasks) => [...tasks, newTask]);
+    onSetInput("");
+  }
   return (
     <main>
       <div className="input-field">
         <div className="oval-copy"></div>
-        <input
-          type="text"
-          placeholder="Create a new todo..."
-          className="input-todo"
-        />
+        <form onSubmit={handleSubmit}>
+          <input
+            type="text"
+            placeholder="Create a new todo..."
+            className="input-todo"
+            value={inputTask}
+            onChange={(e) => onSetInput(e.target.value)}
+          />
+        </form>
       </div>
       <div className="todo-list-container">
-        <TodoList />
+        <TodoList task={task} />
         <Footer />
       </div>
     </main>
   );
 }
 
-function TodoList() {
+function TodoList({ task }) {
   return (
     <ul>
-      {todos.map((todo) => (
+      {task.map((todo) => (
         <Todo todo={todo} key={todo.id} />
       ))}
     </ul>
