@@ -26,6 +26,15 @@ function Header() {
 }
 
 function MainContainer({ inputTask, onSetInput, task, onSetTask }) {
+  const [sortBy, setSortBy] = useState("All");
+
+  // Filtering Logic
+  const filteredTask = task.filter((task) => {
+    if (sortBy === "All") return true;
+    if (sortBy === "Active") return !task.completed;
+    if (sortBy === "Completed") return task.completed;
+  });
+
   function handleSubmit(e) {
     e.preventDefault();
     if (!inputTask) return;
@@ -50,8 +59,13 @@ function MainContainer({ inputTask, onSetInput, task, onSetTask }) {
         </form>
       </div>
       <div className="todo-list-container">
-        <TodoList task={task} onSetTask={onSetTask} />
-        <Footer task={task} onSetTask={onSetTask} />
+        <TodoList task={filteredTask} onSetTask={onSetTask} />
+        <Footer
+          task={task}
+          onSetTask={onSetTask}
+          sortBy={sortBy}
+          onSetSortBy={setSortBy}
+        />
       </div>
     </main>
   );
@@ -87,7 +101,7 @@ function Todo({ todo, onSetTask }) {
     >
       <input
         type="checkbox"
-        value={todo.completed}
+        checked={todo.completed}
         onChange={() => handleChecked(todo.id)}
       />
       <span>{todo.title}</span>
@@ -100,20 +114,33 @@ function Todo({ todo, onSetTask }) {
   );
 }
 
-function Footer({ task, onSetTask }) {
-  // const [sort, onSort] = useState("All");
-
+function Footer({ task, onSetTask, sortBy, onSetSortBy }) {
   function handleClearCompleted() {
     onSetTask((tasks) => tasks.filter((task) => task.completed === false));
   }
 
   return (
     <footer>
-      <span>{task.length} items left</span>
+      <span>{task.filter((t) => !t.completed).length} items left</span>
       <div className="filters">
-        <p className="active">All</p>
-        <p>Active</p>
-        <p>Completed</p>
+        <p
+          className={`${sortBy === "All" ? "active" : ""}`}
+          onClick={() => onSetSortBy("All")}
+        >
+          All
+        </p>
+        <p
+          className={`${sortBy === "Active" ? "active" : ""}`}
+          onClick={() => onSetSortBy("Active")}
+        >
+          Active
+        </p>
+        <p
+          className={`${sortBy === "Completed" ? "active" : ""}`}
+          onClick={() => onSetSortBy("Completed")}
+        >
+          Completed
+        </p>
       </div>
       <p className="clear" onClick={handleClearCompleted}>
         Clear Completed
