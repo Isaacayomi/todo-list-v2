@@ -32,10 +32,11 @@ function Footer({ task, onSetTask, sortBy, onSetSortBy }) {
         </p>
       </footer>
 
-      <div className={`filters ${task.length > 0 ? "summary" : ""}`}>
+      <div className={`filters summary `}>
         <p>
-          {task.length > 0 &&
-            `You have ${task.length} tasks, ${" "}
+          {task.length === 0
+            ? `You have no tasks, add some! 📝`
+            : `You have ${task.length} tasks, ${" "}
           ${task.filter((t) => !t.completed).length} active,${" "}
          ${task.filter((t) => t.completed).length} ${""}
           completed`}
