@@ -42,10 +42,6 @@
   transition: 0.4s linear;
 }
 
-body {
-  /* background: var(--background-color); */
-}
-
 .app {
   background-image: var(--desktop-background-image);
   background-color: var(--background-color);
