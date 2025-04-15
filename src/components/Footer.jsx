@@ -5,9 +5,20 @@ function Footer({ task, onSetTask, sortBy, onSetSortBy }) {
 
   return (
     <>
-      <footer>
-        <span>{task.filter((t) => !t.completed).length} items left</span>
-        <div className="filters">
+      <footer
+        style={
+          task.length === 0 ? { padding: "0rem" } : { paddingBlock: "1.2rem" }
+        }
+      >
+        <span
+          style={task.length === 0 ? { display: "none" } : { display: "flex" }}
+        >
+          {task.filter((t) => !t.completed).length} items left
+        </span>
+        <div
+          className="filters"
+          style={task.length === 0 ? { display: "none" } : { display: "flex" }}
+        >
           <p
             className={`${sortBy === "All" ? "active" : ""}`}
             onClick={() => onSetSortBy("All")}
@@ -27,13 +38,24 @@ function Footer({ task, onSetTask, sortBy, onSetSortBy }) {
             Completed
           </p>
         </div>
-        <p className="clear" onClick={handleClearCompleted}>
+        <p
+          style={task.length === 0 ? { display: "none" } : { display: "flex" }}
+          className="clear"
+          onClick={handleClearCompleted}
+        >
           Clear Completed
         </p>
       </footer>
 
-      <div className={`filters summary `}>
-        <p>
+      <div
+        className="summary"
+        style={
+          task.length === 0
+            ? { paddingBlock: "1.2rem" }
+            : { paddingBlock: "1.2rem" }
+        }
+      >
+        <p style={{ textAlign: "center" }}>
           {task.length === 0
             ? `You have no tasks, add some! 📝`
             : `You have ${task.length} tasks, ${" "}
