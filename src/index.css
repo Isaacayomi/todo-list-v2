@@ -43,13 +43,15 @@
 }
 
 body {
-  background: var(--background-color);
+  /* background: var(--background-color); */
 }
 
 .app {
   background-image: var(--desktop-background-image);
+  background-color: var(--background-color);
   background-repeat: no-repeat;
   background-size: contain;
+  height: 100vh;
 }
 
 header {
@@ -339,7 +341,6 @@ footer {
 
   footer {
     position: relative;
-    /* padding-block: 1.2rem; */
   }
 
   footer span,
