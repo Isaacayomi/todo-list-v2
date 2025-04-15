@@ -3,9 +3,14 @@ import { useState } from "react";
 function App() {
   const [inputTask, setInputTask] = useState("");
   const [task, setTasks] = useState([]);
+  const [isDark, setIsDark] = useState(false);
+
+  function toggleTheme() {
+    setIsDark((isDark) => !isDark);
+  }
   return (
-    <div className="app">
-      <Header />
+    <div className="app" data-theme={isDark ? "dark" : "light"}>
+      <Header onToggle={toggleTheme} isDark={isDark} />
       <MainContainer
         inputTask={inputTask}
         onSetInput={setInputTask}
@@ -16,11 +21,16 @@ function App() {
   );
 }
 
-function Header() {
+function Header({ onToggle, isDark }) {
   return (
     <header>
       <h1>TODO</h1>
-      <img src="./images/icon-moon.svg" alt="icon" className="header-icon" />
+      <img
+        src={!isDark ? "./images/icon-moon.svg" : "./images/icon-sun.svg"}
+        alt="icon"
+        className="header-icon"
+        onClick={onToggle}
+      />
     </header>
   );
 }
@@ -97,14 +107,23 @@ function Todo({ todo, onSetTask }) {
   return (
     <li
       className="todo-item"
-      style={todo.completed ? { textDecoration: "line-through" } : {}}
+      style={
+        todo.completed
+          ? {
+              textDecoration: "line-through",
+              color: "var(--checked)",
+            }
+          : {}
+      }
     >
       <input
         type="checkbox"
         checked={todo.completed}
         onChange={() => handleChecked(todo.id)}
       />
-      <span>{todo.title}</span>
+      <span style={todo.completed ? { color: "var(--checked)" } : {}}>
+        {todo.title}
+      </span>
       <img
         src="./images/icon-cross.svg"
         alt="icon-cross"
@@ -120,32 +139,44 @@ function Footer({ task, onSetTask, sortBy, onSetSortBy }) {
   }
 
   return (
-    <footer>
-      <span>{task.filter((t) => !t.completed).length} items left</span>
-      <div className="filters">
-        <p
-          className={`${sortBy === "All" ? "active" : ""}`}
-          onClick={() => onSetSortBy("All")}
-        >
-          All
+    <>
+      <footer>
+        <span>{task.filter((t) => !t.completed).length} items left</span>
+        <div className="filters">
+          <p
+            className={`${sortBy === "All" ? "active" : ""}`}
+            onClick={() => onSetSortBy("All")}
+          >
+            All
+          </p>
+          <p
+            className={`${sortBy === "Active" ? "active" : ""}`}
+            onClick={() => onSetSortBy("Active")}
+          >
+            Active
+          </p>
+          <p
+            className={`${sortBy === "Completed" ? "active" : ""}`}
+            onClick={() => onSetSortBy("Completed")}
+          >
+            Completed
+          </p>
+        </div>
+        <p className="clear" onClick={handleClearCompleted}>
+          Clear Completed
         </p>
-        <p
-          className={`${sortBy === "Active" ? "active" : ""}`}
-          onClick={() => onSetSortBy("Active")}
-        >
-          Active
-        </p>
-        <p
-          className={`${sortBy === "Completed" ? "active" : ""}`}
-          onClick={() => onSetSortBy("Completed")}
-        >
-          Completed
+      </footer>
+
+      <div className={`filters ${task.length > 0 ? "summary" : ""}`}>
+        <p>
+          {task.length > 0 &&
+            `You have ${task.length} tasks, ${" "}
+          ${task.filter((t) => !t.completed).length} active,${" "}
+         ${task.filter((t) => t.completed).length} ${""}
+          completed`}
         </p>
       </div>
-      <p className="clear" onClick={handleClearCompleted}>
-        Clear Completed
-      </p>
-    </footer>
+    </>
   );
 }
 
