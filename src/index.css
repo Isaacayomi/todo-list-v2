@@ -39,6 +39,7 @@
   box-sizing: border-box;
   font-family: "Josefin Sans", sans-serif;
   list-style-type: none;
+  transition: 0.4s linear;
 }
 
 body {
