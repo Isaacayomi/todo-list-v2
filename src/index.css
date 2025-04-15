@@ -18,8 +18,8 @@
 
 /* Dark mode */
 [data-theme="dark"] {
-  --checked: #4d5067;
   --background-color: #171823;
+  --checked: #4d5067;
   --input-color: #25273d;
   --box-shadow: #00000080;
   --task-input: #767992;
@@ -43,7 +43,7 @@
 }
 
 body {
-  background-color: var(--background-color) !important;
+  background: var(--background-color);
 }
 
 .app {
