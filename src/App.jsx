@@ -4,7 +4,10 @@ import MainContainer from "./components/MainContainer";
 
 function App() {
   const [inputTask, setInputTask] = useState("");
-  const [task, setTasks] = useState([]);
+  const [task, setTasks] = useState(function () {
+    const storedValue = localStorage.getItem("task");
+    return JSON.parse(storedValue);
+  });
   const [isDark, setIsDark] = useState(false);
 
   function toggleTheme() {

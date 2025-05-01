@@ -1,6 +1,14 @@
+import { useEffect } from "react";
 import Todo from "./Todo";
 
 function TodoList({ task, onSetTask }) {
+  useEffect(
+    function () {
+      localStorage.setItem("task", JSON.stringify(task));
+    },
+    [task]
+  );
+
   return (
     <ul>
       {task.map((todo) => (
